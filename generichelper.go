@@ -11,7 +11,15 @@ func ZeroValue[T any]() T {
 	return t0
 }
 
-// DeepEqual is a generic wrapper for reflect.DeepEqual.
+// DeepEqual is a generic wrapper around reflect.DeepEqual.
 func DeepEqual[T any](x, y T) bool {
 	return reflect.DeepEqual(x, y)
+}
+
+// ReturnMust returns 'r', but panics if 'err' is not nil.
+func ReturnMust[R any](r R, err error) R {
+	if err != nil {
+		panic(err)
+	}
+	return r
 }

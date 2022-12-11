@@ -1,8 +1,11 @@
 package generichelper
 
 import (
+	"errors"
 	"reflect"
 	"testing"
+
+	"github.com/solsw/builtinhelper"
 )
 
 func TestZeroValue_bool(t *testing.T) {
@@ -93,5 +96,26 @@ func TestDeepEqual_string(t *testing.T) {
 	want := true
 	if got := DeepEqual("2", "2"); !reflect.DeepEqual(got, want) {
 		t.Errorf("DeepEqual[string]() = %v, want %v", got, want)
+	}
+}
+
+func TestReturnMust_panic(t *testing.T) {
+	got := func() (err error) {
+		defer func() {
+			builtinhelper.PanicToError(recover(), &err)
+		}()
+		ReturnMust(23, errors.New("ReturnMust error"))
+		return nil
+	}()
+	want := "ReturnMust error"
+	if !reflect.DeepEqual(got.Error(), want) {
+		t.Errorf("ReturnMust_panic = %v, want %v", got, want)
+	}
+}
+
+func TestReturnMust_int(t *testing.T) {
+	want := 23
+	if got := ReturnMust(23, nil); !reflect.DeepEqual(got, want) {
+		t.Errorf("ReturnMust[int]() = %v, want %v", got, want)
 	}
 }
