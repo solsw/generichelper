@@ -8,6 +8,20 @@ import (
 	"testing"
 )
 
+func TestTypeHoldsType_int_int(t *testing.T) {
+	want := true
+	if got := TypeHoldsType[int, int](); got != want {
+		t.Errorf("TypeHoldsType[int, int]() = %v, want %v", got, want)
+	}
+}
+
+func TestTypeHoldsType_int_string(t *testing.T) {
+	want := false
+	if got := TypeHoldsType[int, string](); got != want {
+		t.Errorf("TypeHoldsType[int, string]() = %v, want %v", got, want)
+	}
+}
+
 func TestTypeIsType_int_int(t *testing.T) {
 	want := true
 	if got := TypeIsType[int, int](); got != want {
