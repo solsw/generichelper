@@ -22,6 +22,13 @@ func TestTypeHoldsType_int_string(t *testing.T) {
 	}
 }
 
+func TestTypeHoldsType_any_int(t *testing.T) {
+	want := false
+	if got := TypeHoldsType[any, int](); got != want {
+		t.Errorf("TypeHoldsType[any, int]() = %v, want %v", got, want)
+	}
+}
+
 func TestTypeIsType_int_int(t *testing.T) {
 	want := true
 	if got := TypeIsType[int, int](); got != want {

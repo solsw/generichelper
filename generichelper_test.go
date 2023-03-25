@@ -99,23 +99,23 @@ func TestDeepEqual_string(t *testing.T) {
 	}
 }
 
-func TestReturnOrPanic_panic(t *testing.T) {
+func TestMust_panic(t *testing.T) {
 	got := func() (err error) {
 		defer func() {
 			builtinhelper.PanicToError(recover(), &err)
 		}()
-		ReturnOrPanic(23, errors.New("ReturnOrPanic error"))
+		Must(23, errors.New("Must error"))
 		return nil
 	}()
-	want := "ReturnOrPanic error"
+	want := "Must error"
 	if !reflect.DeepEqual(got.Error(), want) {
-		t.Errorf("ReturnOrPanic_panic = %v, want %v", got, want)
+		t.Errorf("Must_panic = %v, want %v", got, want)
 	}
 }
 
-func TestReturnOrPanic_int(t *testing.T) {
+func TestMust_int(t *testing.T) {
 	want := 23
-	if got := ReturnOrPanic(23, nil); !reflect.DeepEqual(got, want) {
-		t.Errorf("ReturnOrPanic[int]() = %v, want %v", got, want)
+	if got := Must(23, nil); !reflect.DeepEqual(got, want) {
+		t.Errorf("Must[int]() = %v, want %v", got, want)
 	}
 }

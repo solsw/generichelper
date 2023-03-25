@@ -11,7 +11,7 @@ func typeHoldsTypePrim[T, O any]() (isO bool, t0 any, oType reflect.Type) {
 		_, isO = t0.(O)
 		return isO, t0, nil
 	}
-	// t0 is nil for pointers, functions, interfaces, slices, channels, and maps
+	// t0 is nil here for interfaces
 	oType = reflect.TypeOf((*O)(nil)).Elem()
 	if oType.Kind() == reflect.Interface {
 		tType := reflect.TypeOf((*T)(nil)).Elem()
