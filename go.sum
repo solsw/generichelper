@@ -1,2 +1,6 @@
 github.com/solsw/builtinhelper v0.2.1 h1:qlRairaa6gVLuM2l6ty/2TAqMHjfuGx9EZSj5ZtRVL8=
 github.com/solsw/builtinhelper v0.2.1/go.mod h1:mV4u6UAgpc2nbpFTNY/94OYv4UJkV3wqwnROm2Dig0w=
+github.com/solsw/mathhelper v0.1.0 h1:whq/z0Wihv/RmcrqQ6MVYmvKpyJloO8kzdj3zkhp/Uo=
+github.com/solsw/mathhelper v0.1.0/go.mod h1:dSSS7JXR+PM1y2XFYhuT5rK+wjznJv7Ysq+Ka9FTQsE=
+golang.org/x/exp v0.0.0-20230314191032-db074128a8ec h1:pAv+d8BM2JNnNctsLJ6nnZ6NqXT8N4+eauvZSb3P0I0=
+golang.org/x/exp v0.0.0-20230314191032-db074128a8ec/go.mod h1:CxIveKay+FTh1D0yPZemJVgC/95VzuuOLq5Qi4xnoYc=

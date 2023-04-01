@@ -4,8 +4,10 @@ import (
 	"errors"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/solsw/builtinhelper"
+	"github.com/solsw/mathhelper"
 )
 
 func TestZeroValue_bool(t *testing.T) {
@@ -117,5 +119,46 @@ func TestMust_int(t *testing.T) {
 	want := 23
 	if got := Must(23, nil); !reflect.DeepEqual(got, want) {
 		t.Errorf("Must[int]() = %v, want %v", got, want)
+	}
+}
+
+func TestTernary_string(t *testing.T) {
+	const evenDay = "even day"
+	const oddDay = "odd day"
+	timeNowDay := time.Now().Day()
+	var res string
+	if mathhelper.IsEven(int64(timeNowDay)) {
+		res = evenDay
+	} else {
+		res = oddDay
+	}
+	type args struct {
+		condition bool
+		trueT     string
+		falseT    string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{name: "1",
+			args: args{
+				condition: func() bool {
+					return mathhelper.IsEven(int64(timeNowDay))
+				}(),
+				trueT:  evenDay,
+				falseT: oddDay,
+			},
+			want: res,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Ternary(tt.args.condition, tt.args.trueT, tt.args.falseT)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Ternary() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

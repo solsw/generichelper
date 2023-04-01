@@ -26,3 +26,14 @@ func Must[R any](r R, err error) R {
 	}
 	return r
 }
+
+// Ternary mimics [ternary conditional operation].
+//
+// [ternary conditional operation]: https://en.wikipedia.org/wiki/Ternary_conditional_operator
+func Ternary[T any](condition bool, trueT, falseT T) T {
+	// https://golang.org/doc/faq#Does_Go_have_a_ternary_form
+	if condition {
+		return trueT
+	}
+	return falseT
+}
