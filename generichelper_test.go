@@ -127,7 +127,7 @@ func TestTernary_string(t *testing.T) {
 	const oddDay = "odd day"
 	timeNowDay := time.Now().Day()
 	var res string
-	if mathhelper.IsEven(int64(timeNowDay)) {
+	if mathhelper.IsEven(timeNowDay) {
 		res = evenDay
 	} else {
 		res = oddDay
@@ -145,7 +145,7 @@ func TestTernary_string(t *testing.T) {
 		{name: "1",
 			args: args{
 				condition: func() bool {
-					return mathhelper.IsEven(int64(timeNowDay))
+					return mathhelper.IsEven(timeNowDay)
 				}(),
 				trueT:  evenDay,
 				falseT: oddDay,
