@@ -20,7 +20,7 @@ func typeHoldsTypePrim[T, O any]() (isO bool, t0 any, oType reflect.Type) {
 	return false, t0, oType
 }
 
-// TypeHoldsType checks whether type T holds other type O.
+// TypeHoldsType reports whether type T holds other type O.
 //
 // TypeHoldsType returns 'true' if:
 //   - [type assertion] T.(O) holds or
@@ -35,7 +35,7 @@ func TypeHoldsType[T, O any]() bool {
 	return isO
 }
 
-// TypeIsType checks whether type T is other type O.
+// TypeIsType reports whether type T is other type O.
 //
 // TypeIsType returns 'true' if:
 //   - [TypeHoldsType] returns 'true' or
@@ -45,8 +45,8 @@ func TypeHoldsType[T, O any]() bool {
 //
 // [converted]: https://go.dev/ref/spec#Conversions
 func TypeIsType[T, O any]() bool {
-	isO, t0, oType := typeHoldsTypePrim[T, O]()
-	if isO {
+	holdsO, t0, oType := typeHoldsTypePrim[T, O]()
+	if holdsO {
 		return true
 	}
 	if t0 == nil {

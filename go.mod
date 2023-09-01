@@ -7,4 +7,4 @@ require (
 	github.com/solsw/mathhelper v0.1.0
 )
 
-require golang.org/x/exp v0.0.0-20230314191032-db074128a8ec // indirect
+require golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1 // indirect
