@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/solsw/builtinhelper"
-	"github.com/solsw/mathhelper"
 )
 
 func TestZeroValue_bool(t *testing.T) {
@@ -127,7 +126,7 @@ func TestTernary_string(t *testing.T) {
 	const oddDay = "odd day"
 	timeNowDay := time.Now().Day()
 	var res string
-	if mathhelper.IsEven(timeNowDay) {
+	if timeNowDay%2 == 0 {
 		res = evenDay
 	} else {
 		res = oddDay
@@ -145,7 +144,7 @@ func TestTernary_string(t *testing.T) {
 		{name: "1",
 			args: args{
 				condition: func() bool {
-					return mathhelper.IsEven(timeNowDay)
+					return timeNowDay%2 == 0
 				}(),
 				trueT:  evenDay,
 				falseT: oddDay,
