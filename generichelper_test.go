@@ -1,12 +1,9 @@
 package generichelper
 
 import (
-	"errors"
 	"reflect"
 	"testing"
 	"time"
-
-	"github.com/solsw/builtinhelper"
 )
 
 func TestZeroValue_bool(t *testing.T) {
@@ -97,49 +94,6 @@ func TestDeepEqual_string(t *testing.T) {
 	want := true
 	if got := DeepEqual("2", "2"); !reflect.DeepEqual(got, want) {
 		t.Errorf("DeepEqual[string]() = %v, want %v", got, want)
-	}
-}
-
-func TestMust_nil(t *testing.T) {
-	if got := Must[any](nil, nil); got != nil {
-		t.Errorf("Must[any]() = %v, want 'nil'", got)
-	}
-}
-
-func TestMust_int(t *testing.T) {
-	want := 23
-	if got := Must(23, nil); !reflect.DeepEqual(got, want) {
-		t.Errorf("Must[int]() = %v, want %v", got, want)
-	}
-}
-
-func TestMust_panic(t *testing.T) {
-	const must_error = "Must error"
-	got := func() (err error) {
-		defer func() {
-			builtinhelper.PanicToError(recover(), &err)
-		}()
-		Must(23, errors.New(must_error))
-		return nil
-	}()
-	want := must_error
-	if !reflect.DeepEqual(got.Error(), want) {
-		t.Errorf("Must_panic = %v, want %v", got, want)
-	}
-}
-
-func TestMust_panic2(t *testing.T) {
-	const must_error = "Must error"
-	got := func() (err error) {
-		defer func() {
-			builtinhelper.PanicToError(recover(), &err)
-		}()
-		Must[any](nil, errors.New(must_error))
-		return nil
-	}()
-	want := must_error
-	if !reflect.DeepEqual(got.Error(), want) {
-		t.Errorf("Must_panic2 = %v, want %v", got, want)
 	}
 }
 
