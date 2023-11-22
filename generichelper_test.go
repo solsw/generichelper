@@ -1,6 +1,7 @@
 package generichelper
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 	"time"
@@ -94,6 +95,76 @@ func TestDeepEqual_string(t *testing.T) {
 	want := true
 	if got := DeepEqual("2", "2"); !reflect.DeepEqual(got, want) {
 		t.Errorf("DeepEqual[string]() = %v, want %v", got, want)
+	}
+}
+
+func TestIs_any(t *testing.T) {
+	type args struct {
+		value any
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "int",
+			args: args{value: 1},
+			want: true,
+		},
+		{name: "string",
+			args: args{value: "two"},
+			want: true,
+		},
+		{name: "error",
+			args: args{value: errors.New("")},
+			want: true,
+		},
+		{name: "slice",
+			args: args{value: []int{}},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Is[any](tt.args.value); got != tt.want {
+				t.Errorf("Is() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIs_string(t *testing.T) {
+	type args struct {
+		value any
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "int",
+			args: args{value: 1},
+			want: false,
+		},
+		{name: "string",
+			args: args{value: "two"},
+			want: true,
+		},
+		{name: "error",
+			args: args{value: errors.New("")},
+			want: false,
+		},
+		{name: "slice",
+			args: args{value: []int{}},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Is[string](tt.args.value); got != tt.want {
+				t.Errorf("Is() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 

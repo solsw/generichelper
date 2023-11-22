@@ -25,6 +25,14 @@ func DeepEqual[T any](x, y T) bool {
 	return reflect.DeepEqual(x, y)
 }
 
+// Is determines whether the 'value' [is] of type T.
+//
+// [is]: https://go.dev/ref/spec#Type_assertions
+func Is[T any](value any) bool {
+	_, ok := value.(T)
+	return ok
+}
+
 // Ternary mimics [ternary conditional operation].
 //
 // [ternary conditional operation]: https://en.wikipedia.org/wiki/Ternary_conditional_operator
