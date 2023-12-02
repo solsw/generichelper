@@ -100,7 +100,7 @@ func TestDeepEqual_string(t *testing.T) {
 
 func TestIs_any(t *testing.T) {
 	type args struct {
-		value any
+		x any
 	}
 	tests := []struct {
 		name string
@@ -108,25 +108,25 @@ func TestIs_any(t *testing.T) {
 		want bool
 	}{
 		{name: "int",
-			args: args{value: 1},
+			args: args{x: 1},
 			want: true,
 		},
 		{name: "string",
-			args: args{value: "two"},
+			args: args{x: "two"},
 			want: true,
 		},
 		{name: "error",
-			args: args{value: errors.New("")},
+			args: args{x: errors.New("")},
 			want: true,
 		},
 		{name: "slice",
-			args: args{value: []int{}},
+			args: args{x: []int{}},
 			want: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Is[any](tt.args.value); got != tt.want {
+			if got := Is[any](tt.args.x); got != tt.want {
 				t.Errorf("Is() = %v, want %v", got, tt.want)
 			}
 		})
@@ -135,7 +135,7 @@ func TestIs_any(t *testing.T) {
 
 func TestIs_string(t *testing.T) {
 	type args struct {
-		value any
+		x any
 	}
 	tests := []struct {
 		name string
@@ -143,25 +143,25 @@ func TestIs_string(t *testing.T) {
 		want bool
 	}{
 		{name: "int",
-			args: args{value: 1},
+			args: args{x: 1},
 			want: false,
 		},
 		{name: "string",
-			args: args{value: "two"},
+			args: args{x: "two"},
 			want: true,
 		},
 		{name: "error",
-			args: args{value: errors.New("")},
+			args: args{x: errors.New("")},
 			want: false,
 		},
 		{name: "slice",
-			args: args{value: []int{}},
+			args: args{x: []int{}},
 			want: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Is[string](tt.args.value); got != tt.want {
+			if got := Is[string](tt.args.x); got != tt.want {
 				t.Errorf("Is() = %v, want %v", got, tt.want)
 			}
 		})

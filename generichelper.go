@@ -12,24 +12,16 @@ func ZeroValue[T any]() T {
 	return t0
 }
 
-// ZeroValueAndError returns T's [zero value] and error.
-//
-// [zero value]: https://go.dev/ref/spec#The_zero_value
-func ZeroValueAndError[T any](err error) (T, error) {
-	var t0 T
-	return t0, err
-}
-
 // DeepEqual is a generic wrapper around [reflect.DeepEqual].
 func DeepEqual[T any](x, y T) bool {
 	return reflect.DeepEqual(x, y)
 }
 
-// Is determines whether the 'value' [is] of type T.
+// Is determines whether 'x' [is] of type T.
 //
 // [is]: https://go.dev/ref/spec#Type_assertions
-func Is[T any](value any) bool {
-	_, ok := value.(T)
+func Is[T any](x any) bool {
+	_, ok := x.(T)
 	return ok
 }
 
