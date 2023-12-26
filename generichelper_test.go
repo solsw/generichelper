@@ -84,6 +84,22 @@ func TestZeroValue_chan(t *testing.T) {
 	}
 }
 
+func TestTypeOf_int(t *testing.T) {
+	var v0 int
+	want := reflect.TypeOf(v0)
+	if got := TypeOf[int](); got != want {
+		t.Errorf("TypeOf[int]() = %v, want %v", got, want)
+	}
+}
+
+func TestTypeOf_string(t *testing.T) {
+	var v0 string
+	want := reflect.TypeOf(v0)
+	if got := TypeOf[string](); got != want {
+		t.Errorf("TypeOf[string]() = %v, want %v", got, want)
+	}
+}
+
 func TestDeepEqual_int(t *testing.T) {
 	want := true
 	if got := DeepEqual(2, 2); !reflect.DeepEqual(got, want) {
