@@ -5,14 +5,14 @@ import (
 )
 
 func testNoType_any[T any]() string {
-	if TypeOf[T]() == TypeOfNoType {
+	if IsNoType[T]() {
 		return "NoType"
 	}
 	return TypeOf[T]().Kind().String()
 }
 
 func testNoType_comparable[T comparable]() string {
-	if TypeOf[T]() == TypeOfNoType {
+	if IsNoType[T]() {
 		return "NoType"
 	}
 	return TypeOf[T]().Kind().String()

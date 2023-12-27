@@ -14,5 +14,9 @@ import (
 // [type parameter]: https://go.dev/ref/spec#Type_parameter_declarations
 type NoType struct{}
 
-// TypeOfNoType is [reflect.Type] of [NoType].
-var TypeOfNoType reflect.Type = TypeOf[NoType]()
+var typeOfNoType reflect.Type = TypeOf[NoType]()
+
+// IsNoType determines whether T's type is [NoType].
+func IsNoType[T any]() bool {
+	return TypeOf[T]() == typeOfNoType
+}
