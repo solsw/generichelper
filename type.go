@@ -4,6 +4,37 @@ import (
 	"reflect"
 )
 
+// NoType is a sentinel type to denote that this [type parameter]
+// needs not to be processed (see ExampleNoType).
+// NoType may be used to [instantiate] [type parameter]
+// with 'any' or 'comparable' [type constraint] only.
+//
+// [instantiate]: https://go.dev/ref/spec#Instantiations
+// [type constraint]: https://go.dev/ref/spec#Type_constraints
+// [type parameter]: https://go.dev/ref/spec#Type_parameter_declarations
+type NoType struct{}
+
+// TypeOf returns T's [reflect.Type].
+func TypeOf[T any]() reflect.Type {
+	var t0 T
+	return reflect.TypeOf(t0)
+}
+
+var (
+	typeOfNoType reflect.Type = TypeOf[NoType]()
+	typeOfString reflect.Type = TypeOf[string]()
+)
+
+// IsNoType determines whether T's type is [NoType].
+func IsNoType[T any]() bool {
+	return TypeOf[T]() == typeOfNoType
+}
+
+// IsString determines whether T's type is [string].
+func IsString[T any]() bool {
+	return TypeOf[T]() == typeOfString
+}
+
 func typeHoldsTypePrim[T, O any]() (isO bool, t0 any, oType reflect.Type) {
 	t0 = ZeroValue[T]()
 	if t0 != nil {

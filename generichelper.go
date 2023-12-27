@@ -12,12 +12,6 @@ func ZeroValue[T any]() T {
 	return t0
 }
 
-// TypeOf returns T's [reflect.Type].
-func TypeOf[T any]() reflect.Type {
-	var t0 T
-	return reflect.TypeOf(t0)
-}
-
 // DeepEqual is a generic wrapper around [reflect.DeepEqual].
 func DeepEqual[T any](x, y T) bool {
 	return reflect.DeepEqual(x, y)

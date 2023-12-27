@@ -8,6 +8,58 @@ import (
 	"testing"
 )
 
+func testNoType_any[T any]() string {
+	if IsNoType[T]() {
+		return "NoType"
+	}
+	return TypeOf[T]().Kind().String()
+}
+
+func testNoType_comparable[T comparable]() string {
+	if IsNoType[T]() {
+		return "NoType"
+	}
+	return TypeOf[T]().Kind().String()
+}
+
+func ExampleNoType() {
+	fmt.Println(testNoType_any[NoType]())
+	fmt.Println(testNoType_any[struct{}]())
+	fmt.Println(testNoType_comparable[NoType]())
+	fmt.Println(testNoType_comparable[int]())
+	// Output:
+	// NoType
+	// struct
+	// NoType
+	// int
+}
+
+func TestTypeOf_int(t *testing.T) {
+	var v0 int
+	want := reflect.TypeOf(v0)
+	if got := TypeOf[int](); got != want {
+		t.Errorf("TypeOf[int]() = %v, want %v", got, want)
+	}
+}
+
+func TestTypeOf_string(t *testing.T) {
+	var v0 string
+	want := reflect.TypeOf(v0)
+	if got := TypeOf[string](); got != want {
+		t.Errorf("TypeOf[string]() = %v, want %v", got, want)
+	}
+}
+
+func ExampleIsString() {
+	fmt.Println(IsString[NoType]())
+	fmt.Println(IsString[string]())
+	fmt.Println(IsString[int]())
+	// Output:
+	// false
+	// true
+	// false
+}
+
 func TestTypeHoldsType_int_int(t *testing.T) {
 	want := true
 	if got := TypeHoldsType[int, int](); got != want {
