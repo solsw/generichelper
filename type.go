@@ -4,6 +4,17 @@ import (
 	"reflect"
 )
 
+// TypeOf returns T's [reflect.Type].
+func TypeOf[T any]() reflect.Type {
+	var t0 T
+	return reflect.TypeOf(t0)
+}
+
+// SameType determines whether T's and O's types are the same.
+func SameType[T, O any]() bool {
+	return TypeOf[T]() == TypeOf[O]()
+}
+
 // NoType is a sentinel type to denote that this [type parameter]
 // needs not to be processed (see ExampleNoType).
 // NoType may be used to [instantiate] [type parameter]
@@ -14,25 +25,9 @@ import (
 // [type parameter]: https://go.dev/ref/spec#Type_parameter_declarations
 type NoType struct{}
 
-// TypeOf returns T's [reflect.Type].
-func TypeOf[T any]() reflect.Type {
-	var t0 T
-	return reflect.TypeOf(t0)
-}
-
-var (
-	typeOfNoType reflect.Type = TypeOf[NoType]()
-	typeOfString reflect.Type = TypeOf[string]()
-)
-
 // IsNoType determines whether T's type is [NoType].
 func IsNoType[T any]() bool {
-	return TypeOf[T]() == typeOfNoType
-}
-
-// IsString determines whether T's type is [string].
-func IsString[T any]() bool {
-	return TypeOf[T]() == typeOfString
+	return SameType[T, NoType]()
 }
 
 func typeHoldsTypePrim[T, O any]() (isO bool, t0 any, oType reflect.Type) {
@@ -66,16 +61,14 @@ func TypeHoldsType[T, O any]() bool {
 	return isO
 }
 
-// TypeIsType reports whether type T is other type O.
-//
-// TypeIsType returns 'true' if:
+// TypeMeetsType returns 'true' if:
 //   - [TypeHoldsType] returns 'true' or
 //   - type T can be [converted] to type O.
 //
-// Otherwise, TypeIsType returns 'false'.
+// Otherwise, TypeMeetsType returns 'false'.
 //
 // [converted]: https://go.dev/ref/spec#Conversions
-func TypeIsType[T, O any]() bool {
+func TypeMeetsType[T, O any]() bool {
 	holdsO, t0, oType := typeHoldsTypePrim[T, O]()
 	if holdsO {
 		return true
