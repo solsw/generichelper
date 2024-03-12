@@ -5,6 +5,8 @@ import (
 )
 
 // TypeOf returns T's [reflect.Type].
+//
+// Deprecated: Use [reflect.TypeFor] instead.
 func TypeOf[T any]() reflect.Type {
 	var t0 T
 	return reflect.TypeOf(t0)

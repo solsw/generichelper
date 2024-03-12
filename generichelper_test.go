@@ -2,6 +2,7 @@ package generichelper
 
 import (
 	"errors"
+	"math"
 	"reflect"
 	"testing"
 	"time"
@@ -95,6 +96,82 @@ func TestDeepEqual_string(t *testing.T) {
 	want := true
 	if got := DeepEqual("2", "2"); !reflect.DeepEqual(got, want) {
 		t.Errorf("DeepEqual[string]() = %v, want %v", got, want)
+	}
+}
+
+func TestDeepEqual_float64(t *testing.T) {
+	type args struct {
+		x float64
+		y float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "equal",
+			args: args{
+				x: 1,
+				y: 1,
+			},
+			want: true,
+		},
+		{name: "not equal",
+			args: args{
+				x: 1,
+				y: 2,
+			},
+			want: false,
+		},
+		{name: "NaNNaN",
+			args: args{
+				x: math.NaN(),
+				y: math.NaN(),
+			},
+			want: false,
+		},
+		{name: "NaN1",
+			args: args{
+				x: math.NaN(),
+				y: 1,
+			},
+			want: false,
+		},
+		{name: "1NaN",
+			args: args{
+				x: 1,
+				y: math.NaN(),
+			},
+			want: false,
+		},
+		{name: "+Inf+Inf",
+			args: args{
+				x: math.Inf(+1),
+				y: math.Inf(+1),
+			},
+			want: true,
+		},
+		{name: "-Inf-Inf",
+			args: args{
+				x: math.Inf(-1),
+				y: math.Inf(-1),
+			},
+			want: true,
+		},
+		{name: "+InfNaN",
+			args: args{
+				x: math.Inf(+1),
+				y: math.NaN(),
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := DeepEqual(tt.args.x, tt.args.y); got != tt.want {
+				t.Errorf("DeepEqual() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
