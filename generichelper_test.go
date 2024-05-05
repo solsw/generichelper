@@ -169,7 +169,91 @@ func TestDeepEqual_float64(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := DeepEqual(tt.args.x, tt.args.y); got != tt.want {
-				t.Errorf("DeepEqual() = %v, want %v", got, tt.want)
+				t.Errorf("DeepEqual[float64]() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsZeroValue_int(t *testing.T) {
+	type args struct {
+		t int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "zero", args: args{t: 0}, want: true},
+		{name: "not zero", args: args{t: 1}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsZeroValue(tt.args.t); got != tt.want {
+				t.Errorf("IsZeroValue[int]() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsZeroValue_string(t *testing.T) {
+	type args struct {
+		t string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "zero", args: args{t: ""}, want: true},
+		{name: "not zero", args: args{t: "1"}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsZeroValue(tt.args.t); got != tt.want {
+				t.Errorf("IsZeroValue[string]() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsZeroValue_interface(t *testing.T) {
+	type args struct {
+		t any
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "zero", args: args{t: nil}, want: true},
+		{name: "not zero", args: args{t: time.Time{}}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsZeroValue(tt.args.t); got != tt.want {
+				t.Errorf("IsZeroValue[interface]() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsZeroValue_func(t *testing.T) {
+	type args struct {
+		t func()
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "zero", args: args{t: nil}, want: true},
+		{name: "not zero", args: args{t: func() {}}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsZeroValue(tt.args.t); got != tt.want {
+				t.Errorf("IsZeroValue[func]() = %v, want %v", got, tt.want)
 			}
 		})
 	}

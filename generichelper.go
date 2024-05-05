@@ -17,6 +17,13 @@ func DeepEqual[T any](x, y T) bool {
 	return reflect.DeepEqual(x, y)
 }
 
+// IsZeroValue determines whether 't' is of [zero value].
+//
+// [zero value]: https://go.dev/ref/spec#The_zero_value
+func IsZeroValue[T any](t T) bool {
+	return DeepEqual(t, ZeroValue[T]())
+}
+
 // Is determines whether 'x' [is] of type T.
 //
 // [is]: https://go.dev/ref/spec#Type_assertions
