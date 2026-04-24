@@ -8,22 +8,6 @@ import (
 	"testing"
 )
 
-func TestTypeOf_int(t *testing.T) {
-	var v0 int
-	want := reflect.TypeOf(v0)
-	if got := TypeOf[int](); got != want {
-		t.Errorf("TypeOf[int]() = %v, want %v", got, want)
-	}
-}
-
-func TestTypeOf_string(t *testing.T) {
-	var v0 string
-	want := reflect.TypeOf(v0)
-	if got := TypeOf[string](); got != want {
-		t.Errorf("TypeOf[string]() = %v, want %v", got, want)
-	}
-}
-
 func ExampleSameType_string() {
 	fmt.Println(SameType[string, NoType]())
 	fmt.Println(SameType[string, string]())
@@ -44,14 +28,14 @@ func testNoType_any[T any]() string {
 	if IsNoType[T]() {
 		return "NoType"
 	}
-	return TypeOf[T]().Kind().String()
+	return reflect.TypeFor[T]().Kind().String()
 }
 
 func testNoType_comparable[T comparable]() string {
 	if IsNoType[T]() {
 		return "NoType"
 	}
-	return TypeOf[T]().Kind().String()
+	return reflect.TypeFor[T]().Kind().String()
 }
 
 func ExampleNoType() {

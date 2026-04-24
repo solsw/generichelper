@@ -4,17 +4,9 @@ import (
 	"reflect"
 )
 
-// TypeOf returns T's [reflect.Type].
-//
-// Deprecated: Use [reflect.TypeFor] instead.
-func TypeOf[T any]() reflect.Type {
-	var t0 T
-	return reflect.TypeOf(t0)
-}
-
 // SameType determines whether T's and O's types are the same.
 func SameType[T, O any]() bool {
-	return TypeOf[T]() == TypeOf[O]()
+	return reflect.TypeFor[T]() == reflect.TypeFor[O]()
 }
 
 // NoType is a sentinel type to denote that this [type parameter]
@@ -34,15 +26,14 @@ func IsNoType[T any]() bool {
 
 func typeHoldsTypePrim[T, O any]() (isO bool, t0 any, oType reflect.Type) {
 	t0 = ZeroValue[T]()
-	if t0 != nil {
-		// T is a value type
+	if reflect.TypeFor[T]().Kind() != reflect.Interface {
 		_, isO = t0.(O)
 		return isO, t0, nil
 	}
 	// t0 is nil here for interfaces
-	oType = reflect.TypeOf((*O)(nil)).Elem()
+	oType = reflect.TypeFor[O]()
 	if oType.Kind() == reflect.Interface {
-		tType := reflect.TypeOf((*T)(nil)).Elem()
+		tType := reflect.TypeFor[T]()
 		return tType.Implements(oType), t0, oType
 	}
 	return false, t0, oType
@@ -79,7 +70,7 @@ func TypeMeetsType[T, O any]() bool {
 		return false
 	}
 	if oType == nil {
-		oType = reflect.TypeOf((*O)(nil)).Elem()
+		oType = reflect.TypeFor[O]()
 	}
 	tValue := reflect.ValueOf(t0)
 	return tValue.CanConvert(oType)
