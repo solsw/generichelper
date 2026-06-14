@@ -141,6 +141,15 @@ func TestTypeMeetsType_reflect_Kind_fmt_Stringer(t *testing.T) {
 	}
 }
 
+func TestTypeMeetsType_slice_int_array_3_int(t *testing.T) {
+	// []int -> [3]int is a valid type conversion (Go 1.20+);
+	// the result must not depend on the zero value's length.
+	want := true
+	if got := TypeMeetsType[[]int, [3]int](); got != want {
+		t.Errorf("TypeMeetsType[[]int, [3]int]() = %v, want %v", got, want)
+	}
+}
+
 type SliceWithString []int
 
 func (SliceWithString) String() string {

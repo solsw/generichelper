@@ -24,21 +24,6 @@ func IsNoType[T any]() bool {
 	return SameType[T, NoType]()
 }
 
-func typeHoldsTypePrim[T, O any]() (isO bool, t0 any, oType reflect.Type) {
-	t0 = ZeroValue[T]()
-	if reflect.TypeFor[T]().Kind() != reflect.Interface {
-		_, isO = t0.(O)
-		return isO, t0, nil
-	}
-	// t0 is nil here for interfaces
-	oType = reflect.TypeFor[O]()
-	if oType.Kind() == reflect.Interface {
-		tType := reflect.TypeFor[T]()
-		return tType.Implements(oType), t0, oType
-	}
-	return false, t0, oType
-}
-
 // TypeHoldsType reports whether type T holds other type O.
 //
 // TypeHoldsType returns 'true' if:
@@ -50,8 +35,19 @@ func typeHoldsTypePrim[T, O any]() (isO bool, t0 any, oType reflect.Type) {
 // [implements]: https://go.dev/ref/spec#Implementing_an_interface
 // [type assertion]: https://go.dev/ref/spec#Type_assertions
 func TypeHoldsType[T, O any]() bool {
-	isO, _, _ := typeHoldsTypePrim[T, O]()
-	return isO
+	if reflect.TypeFor[T]().Kind() != reflect.Interface {
+		// ZeroValue[T]() carries T's dynamic type even when nil,
+		// so the assertion reports whether T holds O.
+		_, isO := any(ZeroValue[T]()).(O)
+		return isO
+	}
+	// T is an interface; its zero value is an untyped nil that cannot be
+	// asserted, so decide by checking whether T implements interface O.
+	oType := reflect.TypeFor[O]()
+	if oType.Kind() != reflect.Interface {
+		return false
+	}
+	return reflect.TypeFor[T]().Implements(oType)
 }
 
 // TypeMeetsType returns 'true' if:
@@ -62,16 +58,11 @@ func TypeHoldsType[T, O any]() bool {
 //
 // [converted]: https://go.dev/ref/spec#Conversions
 func TypeMeetsType[T, O any]() bool {
-	holdsO, t0, oType := typeHoldsTypePrim[T, O]()
-	if holdsO {
+	if TypeHoldsType[T, O]() {
 		return true
 	}
-	if t0 == nil {
-		return false
-	}
-	if oType == nil {
-		oType = reflect.TypeFor[O]()
-	}
-	tValue := reflect.ValueOf(t0)
-	return tValue.CanConvert(oType)
+	// Type-level convertibility: unlike reflect.Value.CanConvert, this does
+	// not depend on a particular value (e.g. a slice's length for slice-to-array
+	// conversions), matching the documented type-based contract.
+	return reflect.TypeFor[T]().ConvertibleTo(reflect.TypeFor[O]())
 }
