@@ -17,10 +17,7 @@ func DeepEqual[T any](x, y T) bool {
 	return reflect.DeepEqual(x, y)
 }
 
-// IsZeroValue determines whether 't' equals T's [zero value].
-//
-// IsZeroValue uses [reflect.DeepEqual], so it allocates and reflects
-// on every call and inherits [reflect.DeepEqual]'s comparison semantics.
+// IsZeroValue reports whether t equals T's [zero value] using [reflect.DeepEqual].
 //
 // [zero value]: https://go.dev/ref/spec#The_zero_value
 func IsZeroValue[T any](t T) bool {

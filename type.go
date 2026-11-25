@@ -11,11 +11,9 @@ func SameType[T, O any]() bool {
 
 // NoType is a sentinel type to denote that this [type parameter]
 // needs not to be processed (see ExampleNoType).
-// NoType may be used to [instantiate] [type parameter]
-// with 'any' or 'comparable' [type constraint] only.
+// NoType satisfies [type constraints] such as any, comparable, and ~struct{}.
 //
-// [instantiate]: https://go.dev/ref/spec#Instantiations
-// [type constraint]: https://go.dev/ref/spec#Type_constraints
+// [type constraints]: https://go.dev/ref/spec#Type_constraints
 // [type parameter]: https://go.dev/ref/spec#Type_parameter_declarations
 type NoType struct{}
 
@@ -24,30 +22,17 @@ func IsNoType[T any]() bool {
 	return SameType[T, NoType]()
 }
 
-// TypeHoldsType reports whether type T holds other type O.
-//
-// TypeHoldsType returns 'true' if:
-//   - [type assertion] T.(O) holds or
-//   - type T [implements] interface type O.
-//
-// Otherwise, TypeHoldsType returns 'false'.
+// TypeHoldsType reports whether T and O are the same type or O is an
+// interface that T [implements].
 //
 // [implements]: https://go.dev/ref/spec#Implementing_an_interface
-// [type assertion]: https://go.dev/ref/spec#Type_assertions
 func TypeHoldsType[T, O any]() bool {
-	if reflect.TypeFor[T]().Kind() != reflect.Interface {
-		// ZeroValue[T]() carries T's dynamic type even when nil,
-		// so the assertion reports whether T holds O.
-		_, isO := any(ZeroValue[T]()).(O)
-		return isO
-	}
-	// T is an interface; its zero value is an untyped nil that cannot be
-	// asserted, so decide by checking whether T implements interface O.
+	tType := reflect.TypeFor[T]()
 	oType := reflect.TypeFor[O]()
-	if oType.Kind() != reflect.Interface {
-		return false
+	if oType.Kind() == reflect.Interface {
+		return tType.Implements(oType)
 	}
-	return reflect.TypeFor[T]().Implements(oType)
+	return tType == oType
 }
 
 // TypeMeetsType returns 'true' if:

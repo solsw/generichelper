@@ -50,6 +50,19 @@ func ExampleNoType() {
 	// int
 }
 
+func TestTypeHoldsType_largeArrayAllocations(t *testing.T) {
+	var holds bool
+	allocs := testing.AllocsPerRun(10, func() {
+		holds = TypeHoldsType[[1 << 20]byte, any]()
+	})
+	if !holds {
+		t.Error("TypeHoldsType returned false for a type that implements any")
+	}
+	if allocs != 0 {
+		t.Errorf("TypeHoldsType allocated %g times per call, want 0", allocs)
+	}
+}
+
 func TestTypeHoldsType_int_int(t *testing.T) {
 	want := true
 	if got := TypeHoldsType[int, int](); got != want {

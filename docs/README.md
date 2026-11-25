@@ -38,11 +38,8 @@ p := generichelper.ZeroValue[*int]()   // nil
 
 #### `IsZeroValue[T any](t T) bool`
 
-Reports whether `t` equals `T`'s zero value.
-
-`IsZeroValue` is implemented with [`reflect.DeepEqual`](https://pkg.go.dev/reflect#DeepEqual),
-so it allocates and reflects on every call and inherits `reflect.DeepEqual`'s
-comparison semantics.
+Reports whether `t` equals `T`'s zero value using
+[`reflect.DeepEqual`](https://pkg.go.dev/reflect#DeepEqual).
 
 ```go
 generichelper.IsZeroValue(0)   // true
@@ -104,15 +101,17 @@ generichelper.SameType[int, string]()    // false
 
 #### `TypeHoldsType[T, O any]() bool`
 
-Reports whether type `T` holds type `O`, i.e. returns `true` when the
-[type assertion](https://go.dev/ref/spec#Type_assertions) `T.(O)` holds or
-when `T` [implements](https://go.dev/ref/spec#Implementing_an_interface) the
-interface type `O`.
+Reports whether `T` and `O` are the same type or `O` is an interface that
+`T` [implements](https://go.dev/ref/spec#Implementing_an_interface). The
+check uses type metadata, so it can inspect large arrays and structs without
+constructing a value of either type.
 
 ```go
-generichelper.TypeHoldsType[int, int]()              // true
-generichelper.TypeHoldsType[*os.File, io.Writer]()   // true (implements)
-generichelper.TypeHoldsType[int, string]()           // false
+generichelper.TypeHoldsType[int, int]()                 // true
+generichelper.TypeHoldsType[*os.File, io.Writer]()      // true
+generichelper.TypeHoldsType[io.ReadWriter, io.Writer]() // true
+generichelper.TypeHoldsType[io.Writer, io.ReadWriter]() // false
+generichelper.TypeHoldsType[int, string]()              // false
 ```
 
 #### `TypeMeetsType[T, O any]() bool`
@@ -131,8 +130,8 @@ generichelper.TypeMeetsType[bool, string]()  // false
 #### `NoType` and `IsNoType[T any]() bool`
 
 `NoType` is a sentinel type used to mark a type parameter that should not be
-processed. It may instantiate type parameters constrained by `any` or
-`comparable` only. `IsNoType[T]()` reports whether `T` is `NoType`.
+processed. It satisfies constraints such as `any`, `comparable`, and
+`~struct{}`. `IsNoType[T]()` reports whether `T` is `NoType`.
 
 ```go
 func process[T any](v T) {

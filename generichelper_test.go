@@ -330,42 +330,10 @@ func TestIs_string(t *testing.T) {
 }
 
 func TestTernary_string(t *testing.T) {
-	const evenDay = "even day"
-	const oddDay = "odd day"
-	timeNowDay := time.Now().Day()
-	var res string
-	if timeNowDay%2 == 0 {
-		res = evenDay
-	} else {
-		res = oddDay
+	if got := Ternary(true, "first", "second"); got != "first" {
+		t.Errorf("Ternary(true) = %q, want %q", got, "first")
 	}
-	type args struct {
-		condition bool
-		trueT     string
-		falseT    string
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{name: "1",
-			args: args{
-				condition: func() bool {
-					return timeNowDay%2 == 0
-				}(),
-				trueT:  evenDay,
-				falseT: oddDay,
-			},
-			want: res,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := Ternary(tt.args.condition, tt.args.trueT, tt.args.falseT)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Ternary() = %v, want %v", got, tt.want)
-			}
-		})
+	if got := Ternary(false, "first", "second"); got != "second" {
+		t.Errorf("Ternary(false) = %q, want %q", got, "second")
 	}
 }
